@@ -64,7 +64,8 @@
             <a href="{% url 'download_leads_excel' %}" class="btn btn-success">
                 <i class="fa-solid fa-download"></i> Download All Leads
             </a>
-            <a href="{% url 'logout' %}" class="btn logout">Logout</a>
+           <a href="{% url 'logout' %}" class="btn logout">Logout</a>
+
         </div>
 
         <!-- Sorting, Filtering, and Searching Controls -->
@@ -151,7 +152,7 @@
                         <a href="{% url 'lead_detail' id=lead.id %}">View Lead</a>
                         <form method="post" action="{% url 'delete-lead' lead.id %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this lead?')">Delete</button>
+                            <button type="submit" class="btn logout" onclick="return confirm('Are you sure you want to delete this lead?')">Delete</button>
                         </form>
                         <a href="{% url 'update_lead' lead.id %}" class="btn btn-primary">Update</a>
                     </td>

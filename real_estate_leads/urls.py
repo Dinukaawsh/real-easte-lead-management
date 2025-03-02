@@ -24,6 +24,8 @@ urlpatterns = [
     path('login/', views.custom_login, name='login'),
     path('logout/', views.logout_view, name='logout'),
 
+ 
+
     # Lead management
     path('leads/', views.lead_list, name='lead_list'), 
     path('add_lead/', views.add_lead, name='add_lead'),
