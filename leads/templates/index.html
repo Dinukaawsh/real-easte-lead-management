@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--  Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for social media icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <title>Real Estate Lead Management</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #f0f2f5, #e0e5ec); /* Subtle gradient */
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #007bff !important;
+        }
+    
+        .btn-primary, .btn-secondary {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            background-color: white; /* Default background */
+            color: black; /* Default text color */
+            border: 2px solid black; /* Border to match the hover effect */
+        }
+    
+        .btn-primary:hover, .btn-secondary:hover {
+            background-color: black; /* Hover background */
+            color: white; /* Hover text color */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+    
+        .container {
+            padding: 60px 20px;
+            
+        }
+        
+        .footer {
+            background-color: black;
+            color: white;
+            padding: 30px 0;
+        }
+    
+        .footer h5 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+    
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+    
+        .footer a:hover {
+            color: #007bff;
+            text-decoration: none;
+        }
+    
+        .footer .social-icons i {
+            font-size: 2em;
+            margin: 0 15px;
+            transition: all 0.3s ease;
+        }
+    
+        .footer .social-icons i:hover {
+            color: #007bff;
+            transform: translateY(-5px);
+        }
+    
+        .footer-bottom {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+    
+       
+        .display-4 {
+            font-weight: 600;
+            color: #333;
+        }
+    
+        .lead {
+            font-weight: 400;
+            color: #555;
+        }
+    
+        .carousel-overlay {
+            position: absolute;
+            top: 40%; /* Adjusted for better spacing */
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Optional: Dark overlay effect */
+            padding: 50px 20px;
+        }
+    
+        .carousel-overlay h1, .carousel-overlay p {
+            margin-bottom: 15px;
+        }
+    
+        .carousel-item {
+            transition: transform 0.5s ease, opacity 0.5s ease-in-out;
+        }
+    
+        .carousel-item-next, .carousel-item-prev, .carousel-item.active {
+            transform: scale(1.05);
+        }
+    
+        .carousel-overlay {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+    
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    
+        .carousel-overlay h1, .carousel-overlay p {
+            opacity: 0;
+            animation: fadeInUp 2s ease forwards;
+        }
+    
+        .carousel-overlay h1 {
+            animation-delay: 0.5s;
+        }
+    
+        .carousel-overlay p {
+            animation-delay: 1s;
+        }
+    
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        .carousel-inner {
+            position: relative;
+            overflow: hidden;
+        }
+    
+        .carousel-item {
+            background-position: center;
+            background-size: cover;
+            height: 100vh; /* Full screen height */
+            position: relative;
+        }
+    
+        .carousel-item img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+    
+        #myBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    
+        #myBtn:hover {
+            background-color: #0056b3;
+        }
+    
+        .clock {
+            position: absolute;
+            top: 50px; /* Adjust the value to control the space above the carousel */
+            left: 50%;
+            transform: translateX(-50%);
+            color:rgb(255, 255, 255);
+            font-size: 60px;
+            font-family: Orbitron;
+            letter-spacing: 7px;
+            z-index: 1000; /* Ensure it's above other elements */
+        }
+
+    </style>
+</head>
+<body>
+    
+    {% load static %}
+
+    <div class="container-fluid p-0 position-relative">
+        <!-- Clock at the top -->
+        <div class="text-center" style="position: absolute; top: 20px; width: 100%; z-index: 10;">
+            <div id="MyClockDisplay" class="clock" onload="showTime()"></div>
+        </div>
+    
+        <!-- Carousel -->
+        <div id="blogCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{% static 'images/image1.jpg' %}" class="d-block w-100" alt="Blog Image 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'images/image12.jpg' %}" class="d-block w-100" alt="Blog Image 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'images/image13.jpg' %}" class="d-block w-100" alt="Blog Image 3">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'images/image4.jpg' %}" class="d-block w-100" alt="Blog Image 3">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'images/image6.jpg' %}" class="d-block w-100" alt="Blog Image 3">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'images/image7.jpg' %}" class="d-block w-100" alt="Blog Image 3">
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="topFunction()" id="myBtn" title="Go to top" class="btn btn-primary">
+            ↑
+        </button>
+        <!-- Overlay Text (Now Positioned Correctly) -->
+<div class="carousel-overlay d-flex flex-column align-items-center justify-content-center text-center">
+    <span class="animated-text">
+        <h1 class="display-4 text-white fw-bold">Welcome to Real Estate Lead Management!</h1>
+    </span>
+
+    <p class="lead text-white">Efficiently manage your real estate leads with ease.</p>
+    {% if not user.is_authenticated %}
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Get Started</a>
+    {% else %}
+        <a href="{% url 'home' %}" class="btn btn-light btn-lg">Go to Home</a>
+    {% endif %}
+</div> 
+</div>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+        <div class="row">
+            <!-- Company Section -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Real Estate Lead Management</h5>
+                <p>Efficiently manage your real estate leads with ease.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white">Home</a></li>
+                    <li><a href="#" class="text-white">About</a></li>
+                    <li><a href="#" class="text-white">Contact</a></li>
+                    <li><a href="#" class="text-white">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Social Media Icons -->
+            <div class="col-md-4">
+                <h5 class="text-uppercase">Follow Us</h5>
+                <div class="social-icons">
+                    <a href="https://facebook.com" class="text-white" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://twitter.com" class="text-white" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" class="text-white" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://linkedin.com" class="text-white" target="_blank">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 Real Estate Lead Management!. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+ <!-- Bootstrap JS -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+ <!-- Bootstrap Carousel JavaScript (Auto Sliding Every 2 Seconds) -->
+ <script>
+     document.addEventListener("DOMContentLoaded", function () {
+         let carousel = new bootstrap.Carousel(document.getElementById('blogCarousel'), {
+             interval: 2000,  // Change slide every 2 seconds
+             ride: "carousel"
+         });
+     });
+
+     window.onscroll = function() {
+         if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+             document.getElementById("myBtn").style.display = "block";
+         } else {
+             document.getElementById("myBtn").style.display = "none";
+         }
+     };
+     
+     function topFunction() {
+         document.body.scrollTop = 0;
+         document.documentElement.scrollTop = 0;
+     }
+
+     document.addEventListener("DOMContentLoaded", function() {
+         const posts = document.querySelectorAll('.card');
+
+         const observer = new IntersectionObserver((entries, observer) => {
+             entries.forEach(entry => {
+                 if (entry.isIntersecting) {
+                     entry.target.classList.add('show');
+                     observer.unobserve(entry.target);
+                 }
+             });
+         }, { threshold: 0.5 });
+
+         posts.forEach(post => {
+             observer.observe(post);
+         });
+     });
+// function to display clock
+     function showTime(){
+         var date = new Date();
+         var h = date.getHours(); // 0 - 23
+         var m = date.getMinutes(); // 0 - 59
+         var s = date.getSeconds(); // 0 - 59
+         var session = "AM";
+         
+         if(h == 0){
+             h = 12;
+         }
+         
+         if(h > 12){
+             h = h - 12;
+             session = "PM";
+         }
+         
+         h = (h < 10) ? "0" + h : h;
+         m = (m < 10) ? "0" + m : m;
+         s = (s < 10) ? "0" + s : s;
+         
+         var time = h + ":" + m + ":" + s + " " + session;
+         document.getElementById("MyClockDisplay").innerText = time;
+         document.getElementById("MyClockDisplay").textContent = time;
+         
+         setTimeout(showTime, 1000);
+         
+     }
+     
+     showTime();
+
+ 
+ </script>
+
+</body>
+</html>

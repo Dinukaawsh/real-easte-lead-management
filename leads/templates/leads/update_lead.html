@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Lead</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 50%; margin: auto; padding-top: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Display errors if the form is not valid -->
+        {% if form.errors %}
+            <div class="error">
+                <ul>
+                    {% for field, errors in form.errors.items %}
+                        <li>{{ field }}: 
+                            <ul>
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <h2>Update Lead: {{ lead.name }}</h2>
+        <form method="post">
+            {% csrf_token %}
+            
+            {{ form.non_field_errors }}
+            
+            <!-- Render the name field manually -->
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" value="{{ lead.name }}" id="name" required />
+            </div>
+            
+            <!-- Render the lead_type field as a hidden input (not editable) -->
+            <input type="hidden" name="lead_type" value="{{ lead.lead_type }}" />
+    
+            <!-- Location Field (Always required) -->
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" name="location" id="location" value="{{ lead.location }}" required />
+            </div>
+    
+            <!-- Seller Fields -->
+            {% if lead.lead_type == 'seller' %}
+            <div id="seller-fields">
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" name="price" id="price" value="{{ lead.price }}" />
+                </div>
+                <div class="form-group">
+                    <label for="property_type">Property Type</label>
+                    <select name="property_type" id="property_type">
+                        <option value="apartment" {% if lead.property_type == 'apartment' %} selected {% endif %}>Apartment</option>
+                        <option value="house" {% if lead.property_type == 'house' %} selected {% endif %}>House</option>
+                        <option value="land" {% if lead.property_type == 'land' %} selected {% endif %}>Land</option>
+                        <option value="condo" {% if lead.property_type == 'condo' %} selected {% endif %}>Condo</option>
+                        <!-- Add other property types as needed -->
+                    </select>
+                </div>
+            </div>
+            {% endif %}
+    
+            <!-- Buyer Fields -->
+            {% if lead.lead_type == 'buyer' %}
+            <div id="buyer-fields">
+                <div class="form-group">
+                    <label for="budget">Budget</label>
+                    <input type="number" name="budget" id="budget" value="{{ lead.budget }}" />
+                </div>
+                <div class="form-group">
+                    <label for="desired_property_type">Desired Property Type</label>
+                    <select name="desired_property_type" id="desired_property_type">
+                        <option value="apartment" {% if lead.desired_property_type == 'apartment' %} selected {% endif %}>Apartment</option>
+                        <option value="house" {% if lead.desired_property_type == 'house' %} selected {% endif %}>House</option>
+                        <option value="land" {% if lead.desired_property_type == 'land' %} selected {% endif %}>Land</option>
+                        <option value="condo" {% if lead.desired_property_type == 'condo' %} selected {% endif %}>Condo</option>
+                        <!-- Add other property types as needed -->
+                    </select>
+                </div>
+            </div>
+            {% endif %}
+    
+            <!-- Renter Fields -->
+            {% if lead.lead_type == 'renter' %}
+            <div id="renter-fields">
+                <div class="form-group">
+                    <label for="rent_budget">Rent Budget</label>
+                    <input type="number" name="rent_budget" id="rent_budget" value="{{ lead.rent_budget }}" />
+                </div>
+                <div class="form-group">
+                    <label for="desired_property_type">Desired Property Type</label>
+                    <select name="desired_property_type" id="desired_property_type">
+                        <option value="apartment" {% if lead.desired_property_type == 'apartment' %} selected {% endif %}>Apartment</option>
+                        <option value="house" {% if lead.desired_property_type == 'house' %} selected {% endif %}>House</option>
+                        <option value="land" {% if lead.desired_property_type == 'land' %} selected {% endif %}>Land</option>
+                        <option value="condo" {% if lead.desired_property_type == 'condo' %} selected {% endif %}>Condo</option>
+                        <!-- Add other property types as needed -->
+                    </select>
+                </div>
+            </div>
+            {% endif %}
+    
+            <!-- Landlord Fields -->
+            {% if lead.lead_type == 'landlord' %}
+            <div id="landlord-fields">
+                <div class="form-group">
+                    <label for="rental_price">Rental Price</label>
+                    <input type="number" name="rental_price" id="rental_price" value="{{ lead.rental_price }}" />
+                </div>
+                <div class="form-group">
+                    <label for="property_type">Property Type</label>
+                    <select name="property_type" id="property_type">
+                        <option value="apartment" {% if lead.property_type == 'apartment' %} selected {% endif %}>Apartment</option>
+                        <option value="house" {% if lead.property_type == 'house' %} selected {% endif %}>House</option>
+                        <option value="condo" {% if lead.property_type == 'condo' %} selected {% endif %}>Condo</option>
+                        <!-- Add other property types as needed -->
+                    </select>
+                </div>
+            </div>
+            {% endif %}
+    
+            <button type="submit">Update Lead</button>
+        </form>
+    </div>
+    
+    
+    
+    <script>
+        function updateFields(select) {
+            const leadType = select.value;
+            
+            // Hide all fields first
+            document.getElementById('seller-fields').classList.add('hidden');
+            document.getElementById('buyer-fields').classList.add('hidden');
+            document.getElementById('renter-fields').classList.add('hidden');
+            document.getElementById('landlord-fields').classList.add('hidden');
+            
+            // Show relevant fields based on the selected lead type
+            if (leadType === 'seller') {
+                document.getElementById('seller-fields').classList.remove('hidden');
+            } else if (leadType === 'buyer') {
+                document.getElementById('buyer-fields').classList.remove('hidden');
+            } else if (leadType === 'renter') {
+                document.getElementById('renter-fields').classList.remove('hidden');
+            } else if (leadType === 'landlord') {
+                document.getElementById('landlord-fields').classList.remove('hidden');
+            }
+        }
+    
+        // Ensure the correct fields are displayed on page load based on the existing lead type
+        document.addEventListener('DOMContentLoaded', function() {
+            updateFields(document.getElementById('lead_type'));
+        });
+    </script>
+    
+</body>
+</html>

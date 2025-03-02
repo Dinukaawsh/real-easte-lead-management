@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <!-- Lead Details Section -->
+        <div class="card shadow-lg p-4">
+            <h2 class="text-center mb-4">{{ lead.name }}'s Details</h2>
+    
+            <table class="table table-bordered">
+                <tr>
+                    <th>Type</th>
+                    <td class="text-capitalize">{{ lead.lead_type }}</td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td>{{ lead.location }}</td>
+                </tr>
+                <tr>
+                    <th>Property Type</th>
+                    <td>
+                        {% if lead.lead_type == 'seller' %}
+                            {{ lead.property_type }}
+                        {% elif lead.lead_type == 'buyer' %}
+                            N/A
+                        {% elif lead.lead_type == 'renter' %}
+                            N/A
+                        {% elif lead.lead_type == 'landlord' %}
+                            {{ lead.property_type }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Desired Property Type</th>
+                    <td>
+                        {% if lead.lead_type == 'buyer' %}
+                            {{ lead.desired_property_type }}
+                        {% elif lead.lead_type == 'renter' %}
+                            {{ lead.desired_property_type }}
+                        {% elif lead.lead_type == 'seller' %}
+                            N/A
+                        {% elif lead.lead_type == 'landlord' %}
+                            {{ lead.desired_property_type }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Price/Budget</th>
+                    <td>
+                        {% if lead.lead_type == 'seller' %}
+                            Rs {{ lead.price }}
+                        {% elif lead.lead_type == 'buyer' %}
+                            Rs {{ lead.budget }}
+                        {% elif lead.lead_type == 'renter' %}
+                            {% if lead.rent_budget %}
+                                Rs {{ lead.rent_budget }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        {% elif lead.lead_type == 'landlord' %}
+                            {% if lead.rental_price %}
+                                Rs {{ lead.rental_price }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+    
+            <a href="{% url 'lead_list' %}" class="btn btn-primary">Back to Leads List</a>
+        </div>
+    
+       <!-- Matching Leads Section -->
+<div class="card shadow-lg p-4 mt-4 border-0 rounded-lg">
+    <h3 class="text-center mb-4">Matching Leads</h3>
+
+    {% if matches %}
+        <ul class="list-group">
+            {% for match in matches %}
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-light mb-3 rounded-lg shadow-sm">
+                    <div class="d-flex flex-column">
+                        <!-- Lead Information -->
+                        <strong class="text-primary mb-2">{{ match.lead.name }}</strong> 
+                        <span class="text-muted mb-2">({{ match.lead.lead_type|title }})</span>
+
+                        <p class="mb-1">Location: <strong>{{ match.lead.location }}</strong></p>
+                        <p class="mb-1">Property Type: <strong>{{ match.lead.property_type }}</strong></p>
+                        <p class="mb-1">Desired Property Type: <strong>{{ match.lead.desired_property_type }}</strong></p>
+
+                        <p class="mb-2">Price/Budget: 
+                            {% if match.lead.lead_type == 'seller' %} Rs {{ match.lead.price }}
+                            {% elif match.lead.lead_type == 'buyer' %} Rs {{ match.lead.budget }}
+                            {% elif match.lead.lead_type == 'renter' %} Rs {{ match.lead.rent_budget }}
+                            {% elif match.lead.lead_type == 'landlord' %} Rs {{ match.lead.rental_price }}
+                            {% else %} N/A
+                            {% endif %}
+                        </p>
+
+                        <p class="mb-2"><strong>Match Score:</strong> <span class="h5">{{ match.score }} / 100</span></p>
+
+                        <!-- Progress Bar -->
+                        <div class="progress mt-2" style="height: 20px;">
+                            <div class="progress-bar {% if match.score > 70 %}bg-success{% elif match.score > 40 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ match.score }}%" aria-valuenow="{{ match.score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <!-- View Button -->
+                    <div class="d-flex align-items-center">
+                        {% if match.lead.id %}
+                            <a href="{% url 'lead_detail' match.lead.id %}" class="btn btn-outline-info btn-sm ms-3">View Details</a>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted text-center mt-3">No matching leads found.</p>
+    {% endif %}
+</div>
+
+        
+        
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
