@@ -9,9 +9,81 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from .utils import calculate_match_score
 
+import openai
+import os
+import uuid
+from django.shortcuts import render, get_object_or_404
+from .models import Lead  # Assuming you have a Lead model
+
+# Ensure API key is securely loaded
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+def ai_match_lead(request, id):
+    try:
+        lead = get_object_or_404(Lead, id=id)
+
+        # Fetch rule-based matches (opposite type, same location)
+        matches = Lead.objects.filter(
+            lead_type="buyer" if lead.lead_type == "seller" else "seller",
+            location=lead.location
+        )
+
+        ai_matches = []  # Store AI-enhanced matches
+
+        for match in matches:
+            prompt = f"""
+            Given the following real estate leads:
+            - Lead 1: Type: {lead.lead_type}, Location: {lead.location}, Property Type: {lead.property_type}, Budget: {getattr(lead, 'budget', 'N/A')}, Price: {getattr(lead, 'price', 'N/A')}
+            - Lead 2: Type: {match.lead_type}, Location: {match.location}, Property Type: {match.property_type}, Budget: {getattr(match, 'budget', 'N/A')}, Price: {getattr(match, 'price', 'N/A')}
+
+            Score the compatibility of these leads based on the following criteria:
+            - Exact location match: 40 points
+            - Property type match: 20 points
+            - Budget/Price match:
+                - Exact match: 40 points
+                - Within 5%: 30 points
+                - Within 10%: 20 points
+                - Within 20%: 10 points
+
+            Return a score between 0 and 100.
+            """
+
+            try:
+                # OpenAI API request
+                response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",  # Change this line to use a model you have access to
+    messages=[{"role": "system", "content": "You are a real estate expert."},
+              {"role": "user", "content": prompt}],
+    max_tokens=10
+)
 
 
+                # Logging the response to check
+                print(f"AI Response: {response}")
 
+                # Extract the score from the response
+                score = int(response["choices"][0]["message"]["content"].strip())
+            except Exception as e:
+                # Logging error
+                print(f"AI Scoring Error: {e}")
+                score = "Error"  # In case of failure, set the score to "Error"
+
+            ai_matches.append({'lead': match, 'score': score})
+
+        # Sort matches by AI score
+        ai_matches.sort(key=lambda x: x['score'] if isinstance(x['score'], int) else 0, reverse=True)
+
+        return render(request, "leads/lead_detail.html", {
+            "lead": lead,
+            "matches": ai_matches,
+            "ai_used": True,
+        })
+
+    except Exception as e:
+        # General error handling
+        print(f"General Error: {e}")
+        return render(request, "leads/error.html", {"message": "Something went wrong while processing the AI match scoring."})
+    
+    
 # Home Page
 def index(request):
     return render(request, 'index.html')

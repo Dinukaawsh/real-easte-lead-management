@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from leads import views  
+from leads.views import ai_match_lead
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,7 +25,9 @@ urlpatterns = [
     path('login/', views.custom_login, name='login'),
     path('logout/', views.logout_view, name='logout'),
 
- 
+    path("lead/<uuid:id>/ai-match/", ai_match_lead, name="ai_match_lead"),
+
+
 
     # Lead management
     path('leads/', views.lead_list, name='lead_list'), 

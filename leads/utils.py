@@ -66,17 +66,7 @@ def calculate_match_score(lead, potential_match):
         elif rent_percentage_diff <= 20:
             score += 10
 
-    # Additional Matching (e.g., bedrooms, property size, amenities)
-    if hasattr(lead, "bedrooms") and hasattr(potential_match, "bedrooms"):
-        if lead.bedrooms == potential_match.bedrooms:
-            score += 10
-
-    if hasattr(lead, "property_size") and hasattr(potential_match, "property_size"):
-        size_difference = abs(lead.property_size - potential_match.property_size)
-        if size_difference == 0:
-            score += 10
-        elif size_difference <= lead.property_size * 0.1:
-            score += 5
+   
 
     return min(score, 100)  # Ensure max score is capped at 100
 

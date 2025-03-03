@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import environ
 
 # Define BASE_DIR first
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +27,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/lead_list/'  # Redirect users after login
  
+
+env = environ.Env()
+environ.Env.read_env()
+OPENAI_API_KEY = env("OPENAI_API_KEY")
 
 
 # Quick-start development settings - unsuitable for production

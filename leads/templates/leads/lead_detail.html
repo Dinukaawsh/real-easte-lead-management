@@ -81,8 +81,11 @@
     
             <a href="{% url 'lead_list' %}" class="btn btn-primary">Back to Leads List</a>
         </div>
-    
-       <!-- Matching Leads Section -->
+
+
+
+
+    <!-- Matching Leads Section -->
 <div class="card shadow-lg p-4 mt-4 border-0 rounded-lg">
     <h3 class="text-center mb-4">Matching Leads</h3>
 
@@ -91,13 +94,11 @@
             {% for match in matches %}
                 <li class="list-group-item d-flex justify-content-between align-items-center bg-light mb-3 rounded-lg shadow-sm">
                     <div class="d-flex flex-column">
-                        <!-- Lead Information -->
                         <strong class="text-primary mb-2">{{ match.lead.name }}</strong> 
                         <span class="text-muted mb-2">({{ match.lead.lead_type|title }})</span>
 
                         <p class="mb-1">Location: <strong>{{ match.lead.location }}</strong></p>
                         <p class="mb-1">Property Type: <strong>{{ match.lead.property_type }}</strong></p>
-                        <p class="mb-1">Desired Property Type: <strong>{{ match.lead.desired_property_type }}</strong></p>
 
                         <p class="mb-2">Price/Budget: 
                             {% if match.lead.lead_type == 'seller' %} Rs {{ match.lead.price }}
@@ -108,11 +109,27 @@
                             {% endif %}
                         </p>
 
-                        <p class="mb-2"><strong>Match Score:</strong> <span class="h5">{{ match.score }} / 100</span></p>
+                        <p class="mb-2"><strong>Match Score:</strong> 
+                            <span class="h5">
+                                {% if match.score == "Error" %}
+                                    <span class="text-danger">AI Scoring Failed</span>
+                                {% else %}
+                                    {{ match.score }} / 100
+                                {% endif %}
+                            </span>
+                        </p>
 
                         <!-- Progress Bar -->
-                        <div class="progress mt-2" style="height: 20px;">
-                            <div class="progress-bar {% if match.score > 70 %}bg-success{% elif match.score > 40 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ match.score }}%" aria-valuenow="{{ match.score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress mt-2" style="height: 25px; border-radius: 10px;">
+                            <div class="progress-bar 
+                                 {% if match.score > 70 %}bg-success
+                                 {% elif match.score > 40 %}bg-warning
+                                 {% else %}bg-danger{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ match.score }}%; font-size: 14px; font-weight: bold;" 
+                                 aria-valuenow="{{ match.score }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ match.score }}%
+                            </div>
                         </div>
                     </div>
 
@@ -128,7 +145,27 @@
     {% else %}
         <p class="text-muted text-center mt-3">No matching leads found.</p>
     {% endif %}
+
+    <!-- AI Matching Button -->
+    <div class="text-center mt-3">
+        <form action="{% url 'ai_match_lead' id=lead.id|stringformat:'s' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Get AI Match Score</button>
+        </form>
+        
+        
+    </div>
+
+    <h3 class="text-center mt-4">
+        {% if ai_used %}
+            AI-Powered Match Scores
+        {% else %}
+            Rule-Based Match Scores
+        {% endif %}
+    </h3>
+
 </div>
+
 
         
         
