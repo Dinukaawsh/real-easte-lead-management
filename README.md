@@ -67,16 +67,7 @@ Set a username, email, and password.
 
 ### **6️⃣ Run the Development Server**  
 python manage.py runserver
-Visit **`http://127.0.0.1:8000/admin`** to log in as an admin.
-
----
-
-## 🤝 Contributing  
-1. Fork the repository  
-2. Create a new branch (`feature/your-feature-name`)  
-3. Commit your changes  
-4. Push the branch  
-5. Open a pull request  
+Visit **`http://127.0.0.1:8000`** to log in as an admin.
 
 ---
 
@@ -86,8 +77,8 @@ This project is **open-source** under the **MIT License**.
 ---
 
 ## 📩 Contact  
-✉️ **Your Name** – [your.email@example.com](mailto:your.email@example.com)  
-🔗 **GitHub** – [github.com/your-username](https://github.com/your-username)  
+✉️ **Dinuka** – [dinukaaw.sh@gmail.com](mailto:dinukaaw.sh@gmail.com)  
+🔗 **GitHub** – [github.com/Dinukaawsh](https://github.com/Dinukaawsh)  
 
 ---
 
