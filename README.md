@@ -42,7 +42,7 @@ The **Real Estate Lead Management** system is a web-based application designed t
 ## 🔧 Installation & Setup  
 
 ### **1️⃣ Clone the Repository**  
-git clone https://github.com/----/real-estate-lead-management.git
+git clone https://github.com/Dinukaawsh/real-estate-lead-management.git
 cd real-estate-lead-management
 
 
