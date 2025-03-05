@@ -69,6 +69,10 @@ Set a username, email, and password.
 python manage.py runserver
 Visit **`http://127.0.0.1:8000`** to log in as an admin.
 
+### Setup
+1. Add your own API key in the `.env` file (real_eatate_leads/ .env)
+2. Run the project
+
 ---
 
 ## 📜 License  
